@@ -1,10 +1,9 @@
 import "package:flutter/material.dart";
 import "package:hive_ce_flutter/hive_flutter.dart";
-import "package:test_project/ui/month.dart";
+import "package:test_project/service/texteingabe_dialog.dart";
 import "package:test_project/ui/new_entry.dart";
-import 'package:intl/intl.dart';
+import "../data/category.dart";
 import "../data/entry.dart";
-import "overview_month.dart";
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,55 +16,39 @@ class _HomeScreenState extends State<HomeScreen> {
   // get the box
   final _myBox = Hive.box("BOX");
 
-  List entries = [];
+  // entries, each entry belongs to zero or more categories
+  List<Entry> _entries = [];
+
+  // Categories, each category has zero or more entries
+  List<Category> _categories = [];
 
   @override
   void initState() {
-    entries = _myBox.get("ENTRIES") ?? [];
-    _months = [
-      Month(name: "Januar", entriesCount: monatsStatistik["Januar"] ?? 0),
-      Month(name: "Februar", entriesCount: monatsStatistik["Februar"] ?? 0),
-      Month(name: "März", entriesCount: monatsStatistik["März"] ?? 0),
-      Month(name: "April", entriesCount: monatsStatistik["April"] ?? 0),
-      Month(name: "Mai", entriesCount: monatsStatistik["Mai"] ?? 0),
-      Month(name: "Juni", entriesCount: monatsStatistik["Juni"] ?? 0),
-      Month(name: "Juli", entriesCount: monatsStatistik["Juli"] ?? 0),
-      Month(name: "August", entriesCount: monatsStatistik["August"] ?? 0),
-      Month(name: "September", entriesCount: monatsStatistik["September"] ?? 0),
-      Month(name: "Oktober", entriesCount: monatsStatistik["Oktober"] ?? 0),
-      Month(name: "November", entriesCount: monatsStatistik["November"] ?? 0),
-      Month(name: "Dezember", entriesCount: monatsStatistik["Dezember"] ?? 0),
-    ];
+    _entries = (_myBox.get("ENTRIES") as List?)?.cast<Entry>() ?? [];
+    _categories = (_myBox.get("CATEGORIES") as List?)?.cast<Category>() ?? [];
     super.initState();
   }
 
   void addEntry(Entry val) {
-    String monthKey = val.monthName;
     setState(() {
-      entries.add(val);
-      monatsStatistik[monthKey] = (monatsStatistik[monthKey] ?? 0) + 1;
+      _entries.add(val);
     });
-    saveEntriesToDB();
+    _myBox.put("ENTRIES", _entries);
   }
 
   void deleteEntry(int index) {
     setState(() {
-      entries.removeAt(index);
+      _entries.removeAt(index);
     });
-    saveEntriesToDB();
+    _myBox.put("ENTRIES", _entries);
   }
 
-  void saveEntriesToDB() {
-    _myBox.put("ENTRIES", entries);
+  void addCategory(Category category) {
+    setState(() {
+      _categories.add(category);
+    });
+    _myBox.put("CATEGORIES", _categories);
   }
-
-  // month overview
-  // Speichert die Anzahl der Einträge pro Monat
-  Map<String, int> monatsStatistik = {};
-
-  late List<Month> _months;
-
-  void te() {}
 
   @override
   Widget build(BuildContext context) {
@@ -76,31 +59,82 @@ class _HomeScreenState extends State<HomeScreen> {
           "Startseite",
         ),
       ),
+      drawer: SafeArea(
+        child: Drawer(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextButton(
+                onPressed: () async {
+                  final String? result = await TexteingabeDialog.show(
+                      context, "Kategoriename eingeben:");
+                  if (result != null && result.isNotEmpty) {
+                    addCategory(Category(result));
+                  }
+                },
+                child: Text(
+                  "Kategorie hinzufügen",
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
       body: Column(
         children: [
-          SizedBox(
-            height: (MediaQuery.of(context).size.height / 3),
-            child: OverviewMonth(
-              months: _months,
-            ),
-          ),
-          SizedBox(
-            height: (MediaQuery.of(context).size.height / 3),
+          Expanded(
             child: ListView.builder(
-              itemCount: entries.length,
+              itemCount: _entries.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(
-                    entries[index].toString(),
-                  ),
-                  trailing: IconButton(
-                    onPressed: () {
-                      deleteEntry(index);
-                    },
-                    icon: Icon(
-                      Icons.remove_circle_outline_rounded,
+                Entry e = _entries[index];
+                return Container(
+                  margin: const EdgeInsets.all(10), // Äußerer Abstand
+                  padding: const EdgeInsets.all(10), // Innerer Abstand
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.blue, // Farbe des Rahmens
+                      width: 2, // Breite des Rahmens
                     ),
                   ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        style: const TextStyle(fontSize: 24),
+                        "Kategorie: ${e.category}",
+                      ),
+                      Text(
+                        style: const TextStyle(fontSize: 24),
+                        "Datum:: ${e.eventDate.day}.${e.eventDate.month}.${e.eventDate.year}",
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          deleteEntry(index);
+                        },
+                        icon: Icon(
+                          Icons.remove_circle_outline_rounded,
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _categories.length, // Anzahl der Einträge
+              itemBuilder: (context, index) {
+                String key = _categories[index].title; // Schlüssel abrufen
+                return ListTile(
+                  title: Text(
+                    key,
+                    textAlign: TextAlign.center,
+                  ), // Schlüssel als Titel anzeigen
                 );
               },
             ),
