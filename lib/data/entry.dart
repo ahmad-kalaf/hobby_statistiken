@@ -6,30 +6,12 @@ part 'entry.g.dart';
 class Entry {
   // Instances
   @HiveField(0)
-  final String _category;
+  final String? _category;
   @HiveField(1)
   final DateTime _eventDate;
-  late final String _monthName;
-  List<String> months = [
-    "Januar",
-    "Februar",
-    "März",
-    "April",
-    "Mai",
-    "Juni",
-    "Juli",
-    "August",
-    "September",
-    "Oktober",
-    "November",
-    "Dezember",
-  ];
 
   // Constructor
-  Entry(this._category, this._eventDate) {
-    int month = _eventDate.month;
-    _monthName = months[month + 1];
-  }
+  Entry(this._category, this._eventDate);
 
   @override
   String toString() {
@@ -37,9 +19,9 @@ class Entry {
   }
 
   // getter
-  String get category => _category;
+  String? get category => _category;
 
   DateTime get eventDate => _eventDate;
 
-  String get monthName => _monthName;
+// String get monthName => _monthName;
 }

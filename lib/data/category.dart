@@ -7,7 +7,14 @@ class Category {
   @HiveField(0)
   final String title;
   @HiveField(1)
-  int? numOfEntries;
+  int numOfEntries;
 
   Category(this.title, {this.numOfEntries = 0});
+
+  static Category stringToCategory(String s) {
+    if (s.isEmpty) {
+      throw Exception("String s darf nicht null sein");
+    }
+    return Category(s);
+  }
 }

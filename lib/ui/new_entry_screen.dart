@@ -10,6 +10,8 @@ class NewEntry extends StatefulWidget {
 }
 
 class _NewEntryState extends State<NewEntry> {
+  final TextEditingController _categoryTextEditingController =
+      TextEditingController();
   DateTime selectedDate = DateTime.now();
   String _selectDateButtonText = "Datum auswählen";
 
@@ -35,7 +37,11 @@ class _NewEntryState extends State<NewEntry> {
   }
 
   Entry createEntry() {
-    return Entry("Testkategorie", selectedDate);
+    String category = _categoryTextEditingController.text.trim();
+    if (category.isEmpty) {
+      category = "Allgemein";
+    }
+    return Entry(category, selectedDate);
   }
 
   @override
@@ -59,6 +65,12 @@ class _NewEntryState extends State<NewEntry> {
             },
             child: Text(
               _selectDateButtonText,
+            ),
+          ),
+          ListTile(
+            leading: Text("Kategorie:"),
+            title: TextField(
+              controller: _categoryTextEditingController,
             ),
           ),
         ],
