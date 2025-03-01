@@ -21,6 +21,7 @@ class _NewEntryState extends State<NewEntry> {
       initialDate: selectedDate,
       firstDate: DateTime(1700),
       lastDate: DateTime(2200),
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
     );
 
     if (pickedDate != null) {

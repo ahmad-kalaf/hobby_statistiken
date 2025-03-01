@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
 import "package:hive_ce_flutter/hive_flutter.dart";
+import "package:intl/intl.dart";
 import "package:test_project/service/text_input_dialog.dart";
 import "package:test_project/ui/new_entry_screen.dart";
+import "package:test_project/widgets/entry_widget.dart";
 import "../data/category.dart";
 import "../data/entry.dart";
 
@@ -157,38 +159,13 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: _entries.length,
               itemBuilder: (context, index) {
                 Entry e = _entries[index];
-                return Container(
-                  margin: const EdgeInsets.all(10), // Äußerer Abstand
-                  padding: const EdgeInsets.all(10), // Innerer Abstand
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Colors.blue, // Farbe des Rahmens
-                      width: 2, // Breite des Rahmens
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        style: const TextStyle(fontSize: 24),
-                        "Kategorie: ${e.category}",
-                      ),
-                      Text(
-                        style: const TextStyle(fontSize: 24),
-                        "Datum:: ${e.eventDate.day}.${e.eventDate.month}.${e.eventDate.year}",
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          deleteEntry(index);
-                        },
-                        icon: Icon(
-                          Icons.remove_circle_outline_rounded,
-                        ),
-                      )
-                    ],
-                  ),
+                return EntryWidget(
+                  category: e.category.toString(),
+                  date: DateFormat('EEE , d/M/y', 'de_DE').format(e.eventDate),
+                  description: "",
+                  deleteFunction: () {
+                    deleteEntry(index);
+                  },
                 );
               },
             ),
