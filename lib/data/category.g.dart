@@ -18,7 +18,8 @@ class CategoryAdapter extends TypeAdapter<Category> {
     };
     return Category(
       fields[0] as String,
-    )..numOfEntries = (fields[1] as num).toInt();
+      numOfEntries: fields[1] == null ? 0 : (fields[1] as num).toInt(),
+    );
   }
 
   @override

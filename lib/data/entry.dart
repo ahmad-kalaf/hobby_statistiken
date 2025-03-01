@@ -9,9 +9,11 @@ class Entry {
   final String? _category;
   @HiveField(1)
   final DateTime _eventDate;
+  @HiveField(2)
+  final String? _description;
 
   // Constructor
-  Entry(this._category, this._eventDate);
+  Entry(this._category, this._eventDate, this._description);
 
   @override
   String toString() {
@@ -23,5 +25,5 @@ class Entry {
 
   DateTime get eventDate => _eventDate;
 
-// String get monthName => _monthName;
+  String? get description => _description;
 }

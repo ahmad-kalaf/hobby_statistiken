@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_project/service/strings_constants.dart';
 
 class EntryWidget extends StatelessWidget {
   EntryWidget(
@@ -29,18 +30,27 @@ class EntryWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // ListTile(
+          //   leading: Text(kEntryCategory),
+          //   title: Text(category),
+          // ),
           Text(
             style: const TextStyle(fontSize: 24),
-            "Kategorie: $category",
+            "$kEntryCategory: $category",
           ),
           Text(
             style: const TextStyle(fontSize: 24),
-            "Datum: $date",
+            "$kDate: $date",
+          ),
+          Text(
+            style: const TextStyle(fontSize: 24),
+            "$kDescription: $description",
           ),
           IconButton(
             onPressed: deleteFunction,
             icon: Icon(
               Icons.remove_circle_outline_rounded,
+              color: Colors.red,
             ),
           )
         ],

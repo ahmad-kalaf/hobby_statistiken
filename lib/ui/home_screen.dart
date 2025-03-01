@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return EntryWidget(
                   category: e.category.toString(),
                   date: DateFormat('EEE , d/M/y', 'de_DE').format(e.eventDate),
-                  description: "",
+                  description: e.description.toString(),
                   deleteFunction: () {
                     deleteEntry(index);
                   },

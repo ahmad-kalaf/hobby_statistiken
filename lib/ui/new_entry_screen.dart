@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_project/service/strings_constants.dart';
 
 import '../data/entry.dart';
 
@@ -12,8 +13,10 @@ class NewEntry extends StatefulWidget {
 class _NewEntryState extends State<NewEntry> {
   final TextEditingController _categoryTextEditingController =
       TextEditingController();
+  final TextEditingController _descriptionTextEditingController =
+      TextEditingController();
   DateTime selectedDate = DateTime.now();
-  String _selectDateButtonText = "Datum auswählen";
+  String _selectDateButtonText = kDateTimePickerText;
 
   Future<void> _selectDate() async {
     final DateTime? pickedDate = await showDatePicker(
@@ -33,30 +36,33 @@ class _NewEntryState extends State<NewEntry> {
         },
       );
     } else {
-      throw Exception("selectedDate is null");
+      throw Exception(kSelectDateNullExceptionText);
     }
   }
 
   Entry createEntry() {
     String category = _categoryTextEditingController.text.trim();
     if (category.isEmpty) {
-      category = "Allgemein";
+      category = kDefaultCategoryName;
     }
-    return Entry(category, selectedDate);
+    return Entry(
+        category, selectedDate, _descriptionTextEditingController.text.trim());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Neuen Eintrag erstellen",
+        centerTitle: true,
+        title: Text(
+          kNewEntryScreenTitle,
         ),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: 20,
         children: [
           // Empty row to expand column in horizontal direction
           const Row(mainAxisSize: MainAxisSize.max),
@@ -68,22 +74,56 @@ class _NewEntryState extends State<NewEntry> {
               _selectDateButtonText,
             ),
           ),
-          ListTile(
-            leading: Text("Kategorie:"),
-            title: TextField(
-              controller: _categoryTextEditingController,
+          DecoratedBox(
+            decoration: BoxDecoration(
+              // color: Colors.blue, // Hintergrundfarbe
+              borderRadius: BorderRadius.circular(20), // Abgerundete Ecken
+              border: Border.all(color: Colors.blue, width: 2), // Rand
+            ),
+            child: ListTile(
+              leading: Text(kEntryCategory),
+              title: TextField(
+                controller: _categoryTextEditingController,
+                decoration: InputDecoration(
+                  labelText: "Gib deinen Text ein",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+            ),
+          ),
+
+          DecoratedBox(
+            decoration: BoxDecoration(
+              // color: Colors.blue, // Hintergrundfarbe
+              borderRadius: BorderRadius.circular(20), // Abgerundete Ecken
+              border: Border.all(color: Colors.blue, width: 2), // Rand
+            ),
+            child: ListTile(
+              leading: Text(kEntryDescription),
+              title: TextField(
+                controller: _descriptionTextEditingController,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                decoration: InputDecoration(
+                  labelText: "Gib deinen Text ein",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
             ),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Entry entry = createEntry();
           Navigator.pop(context, entry);
         },
-        child: Text(
-          "Speichern",
+        label: Text(
+          kSaveEntry,
         ),
+        icon: Icon(Icons.check_circle_outline_rounded),
       ),
     );
   }

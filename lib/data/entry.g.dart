@@ -17,19 +17,22 @@ class EntryAdapter extends TypeAdapter<Entry> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Entry(
-      fields[0] as String,
+      fields[0] as String?,
       fields[1] as DateTime,
+      fields[2] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Entry obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj._category)
       ..writeByte(1)
-      ..write(obj._eventDate);
+      ..write(obj._eventDate)
+      ..writeByte(2)
+      ..write(obj._description);
   }
 
   @override
