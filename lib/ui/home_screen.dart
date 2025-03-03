@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
 import "package:hive_ce_flutter/hive_flutter.dart";
 import "package:intl/intl.dart";
-import "package:test_project/service/text_input_dialog.dart";
+import "package:test_project/ui/category_overview_screen.dart";
+import "package:test_project/ui/home_overview_screen.dart";
 import "package:test_project/ui/new_entry_screen.dart";
 import "package:test_project/widgets/entry_widget.dart";
 import "../data/category.dart";
@@ -30,6 +31,20 @@ class _HomeScreenState extends State<HomeScreen> {
     _categories = (_myBox.get("CATEGORIES") as List?)?.cast<Category>() ?? [];
     super.initState();
   }
+
+  // current screen index
+  int _currentScreenIndex = 0;
+
+  // List of screens
+  final List<Widget> _screens = [
+    HomeOverviewScreen(),
+    CategoryOverviewScreen(),
+  ];
+
+  final List<String> _screensTitles = [
+    "Startseite",
+    "Kategorienansicht",
+  ];
 
   void updateCategoriesAndEntries() {
     setState(() {
@@ -60,14 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
       // update the number of entries for the category
       countEntriesForEachCategory();
     });
-    updateCategoriesAndEntries();
-  }
-
-  void deleteEntry(int index) {
-    setState(() {
-      _entries.removeAt(index);
-    });
-    countEntriesForEachCategory();
     updateCategoriesAndEntries();
   }
 
@@ -122,78 +129,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          "Startseite",
+        title: Text(
+          _screensTitles[_currentScreenIndex],
         ),
       ),
-      drawer: SafeArea(
-        child: Drawer(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextButton(
-                onPressed: () async {
-                  final String? result = await TexteingabeDialog.show(
-                      context, "Kategoriename eingeben:");
-                  if (result != null &&
-                      result.isNotEmpty &&
-                      !_categories
-                          .contains(Category.stringToCategory(result.trim()))) {
-                    addCategory(Category(result.trim()));
-                  }
-                },
-                child: Text(
-                  "Kategorie hinzufügen",
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: _entries.length,
-              itemBuilder: (context, index) {
-                Entry e = _entries[index];
-                return EntryWidget(
-                  category: e.category.toString(),
-                  date: DateFormat('EEE , d/M/y', 'de_DE').format(e.eventDate),
-                  description: e.description.toString(),
-                  deleteFunction: () {
-                    deleteEntry(index);
-                  },
-                );
-              },
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _categories.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: IconButton(
-                    onPressed: () {
-                      deleteCategoryAt(index);
-                    },
-                    icon: Icon(
-                      Icons.remove_circle_outline_rounded,
-                    ),
-                  ),
-                  title: Text(
-                    _categories[index].title,
-                    textAlign: TextAlign.center,
-                  ),
-                  trailing: Text("${_categories[index].numOfEntries}"),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+      body: _screens[_currentScreenIndex],
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           final Entry? result = await Navigator.push<Entry>(
@@ -210,6 +150,19 @@ class _HomeScreenState extends State<HomeScreen> {
           "Neuer Eintrag",
         ),
         icon: const Icon(Icons.add),
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentScreenIndex,
+        onDestinationSelected: (int index) {
+          setState(() {
+            _currentScreenIndex = index;
+          });
+        },
+        destinations: [
+          NavigationDestination(icon: Icon(Icons.home), label: "Startseite"),
+          NavigationDestination(
+              icon: Icon(Icons.category), label: "Kategorien"),
+        ],
       ),
     );
   }

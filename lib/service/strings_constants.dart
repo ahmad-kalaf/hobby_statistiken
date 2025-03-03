@@ -6,5 +6,5 @@ final String kDefaultCategoryName = "Allgemein";
 final String kNewEntryScreenTitle = "Neuen Eintrag erstellen";
 final String kEntryDescription = "Beschreibung /\nInhalt";
 
-final String kDate = "Datum";
-final String kDescription = "Beschreibung / Inhal";
+final String kDate = "Erstelldatum";
+final String kDescription = "Inhalt";

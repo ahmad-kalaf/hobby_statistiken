@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:test_project/service/strings_constants.dart';
+import 'package:test_project/widgets/custom_row_for_entry.dart';
 
 class EntryWidget extends StatelessWidget {
-  EntryWidget(
+  const EntryWidget(
       {super.key,
       required this.category,
       required this.date,
       required this.description,
       required this.deleteFunction});
 
-  String category;
-  String date;
-  String description;
+  final String category;
+  final String date;
+  final String description;
   final VoidCallback deleteFunction;
 
   @override
@@ -30,29 +31,19 @@ class EntryWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // ListTile(
-          //   leading: Text(kEntryCategory),
-          //   title: Text(category),
-          // ),
-          Text(
-            style: const TextStyle(fontSize: 24),
-            "$kEntryCategory: $category",
+          CustomRowForEntry(
+            leading: kEntryCategory,
+            content: category,
           ),
-          Text(
-            style: const TextStyle(fontSize: 24),
-            "$kDate: $date",
-          ),
-          Text(
-            style: const TextStyle(fontSize: 24),
-            "$kDescription: $description",
-          ),
+          CustomRowForEntry(leading: kDate, content: date),
+          CustomRowForEntry(leading: kDescription, content: description),
           IconButton(
             onPressed: deleteFunction,
             icon: Icon(
-              Icons.remove_circle_outline_rounded,
+              Icons.delete_forever,
               color: Colors.red,
             ),
-          )
+          ),
         ],
       ),
     );
