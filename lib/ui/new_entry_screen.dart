@@ -35,8 +35,6 @@ class _NewEntryState extends State<NewEntry> {
               "${selectedDate.day}.${selectedDate.month}.${selectedDate.year}";
         },
       );
-    } else {
-      throw Exception(kSelectDateNullExceptionText);
     }
   }
 
@@ -58,57 +56,54 @@ class _NewEntryState extends State<NewEntry> {
           kNewEntryScreenTitle,
         ),
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
+      body: Flex(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         spacing: 20,
+        direction: Axis.vertical,
         children: [
-          // Empty row to expand column in horizontal direction
-          const Row(mainAxisSize: MainAxisSize.max),
-          ElevatedButton(
-            onPressed: () async {
-              await _selectDate();
-            },
-            child: Text(
-              _selectDateButtonText,
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: ElevatedButton(
+              onPressed: () async {
+                await _selectDate();
+              },
+              child: Text(
+                _selectDateButtonText,
+              ),
             ),
           ),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              // color: Colors.blue, // Hintergrundfarbe
-              borderRadius: BorderRadius.circular(20), // Abgerundete Ecken
-              border: Border.all(color: Colors.blue, width: 2), // Rand
-            ),
+          Expanded(
+            flex: 1,
             child: ListTile(
-              leading: Text(kEntryCategory),
+              // leading: Text(kEntryCategory),
+              // titleAlignment: ListTileTitleAlignment.titleHeight,
               title: TextField(
                 controller: _categoryTextEditingController,
+                maxLength: 100,
                 decoration: InputDecoration(
-                  labelText: "Gib deinen Text ein",
+                  labelText: "Kategoriename eingeben",
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
             ),
           ),
-
-          DecoratedBox(
-            decoration: BoxDecoration(
-              // color: Colors.blue, // Hintergrundfarbe
-              borderRadius: BorderRadius.circular(20), // Abgerundete Ecken
-              border: Border.all(color: Colors.blue, width: 2), // Rand
-            ),
+          Expanded(
+            flex: 8,
             child: ListTile(
-              leading: Text(kEntryDescription),
+              // leading: Text(kEntryDescription),
               title: TextField(
                 controller: _descriptionTextEditingController,
                 keyboardType: TextInputType.multiline,
-                maxLines: null,
+                maxLines: 3,
+                maxLength: 2000,
                 decoration: InputDecoration(
-                  labelText: "Gib deinen Text ein",
+                  labelText: "Beschreibung / Inhalt eingeben",
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
             ),

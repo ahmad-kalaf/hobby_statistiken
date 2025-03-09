@@ -16,32 +16,37 @@ class HomeOverviewScreen extends StatefulWidget {
 class _HomeOverviewScreenState extends State<HomeOverviewScreen> {
   @override
   Widget build(BuildContext context) {
-    return Builder(builder: (context) {
-      return Consumer<EntryProvider>(
-        builder: (context, provider, child) {
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: provider.entries.length,
-                  itemBuilder: (context, index) {
-                    Entry e = provider.entries[index];
-                    return EntryWidget(
-                      category: e.category.toString(),
-                      date: DateFormat('EEE , d/M/y', 'de_DE')
-                          .format(e.eventDate),
-                      description: e.description.toString(),
-                      deleteFunction: () {
-                        provider.deleteEntry(index);
-                      },
-                    );
-                  },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Startseite'),
+      ),
+      body: Builder(builder: (context) {
+        return Consumer<EntryProvider>(
+          builder: (context, provider, child) {
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: provider.entries.length,
+                    itemBuilder: (context, index) {
+                      Entry e = provider.entries[index];
+                      return EntryWidget(
+                        category: e.category.toString(),
+                        date: DateFormat('EEE , d/M/y', 'de_DE')
+                            .format(e.eventDate),
+                        description: e.description.toString(),
+                        deleteFunction: () {
+                          provider.deleteEntry(index);
+                        },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
-      );
-    });
+              ],
+            );
+          },
+        );
+      }),
+    );
   }
 }

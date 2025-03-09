@@ -23,21 +23,9 @@ class _HomeScreenState extends State<HomeScreen> {
     CategoryOverviewScreen(),
   ];
 
-  //
-  final List<String> _screensTitles = [
-    "Startseite",
-    "Kategorienansicht",
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          _screensTitles[_currentScreenIndex],
-        ),
-      ),
       body: _screens[_currentScreenIndex],
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
