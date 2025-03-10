@@ -53,11 +53,7 @@ class EntryProvider extends ChangeNotifier {
       (element) => element.title == _entries[index].category,
     );
     c.numOfEntries--;
-    for (int i = 0; i < _categories.length; i++) {
-      if (_categories[i].numOfEntries == 0) {
-        _categories.removeAt(i);
-      }
-    }
+
     _entries.removeAt(index);
     _myBox.put("ENTRIES", _entries);
     _myBox.put("CATEGORIES", _categories);
@@ -71,5 +67,13 @@ class EntryProvider extends ChangeNotifier {
           (element) => element.category == categoryTitle,
         )
         .toList();
+  }
+
+  void deleteCategoryAndContainingEntries(String categoryTitle) {
+    _entries.removeWhere((element) => element.category == categoryTitle);
+    _categories.removeWhere((element) => element.title == categoryTitle);
+    _myBox.put("ENTRIES", _entries);
+    _myBox.put("CATEGORIES", _categories);
+    notifyListeners();
   }
 }
