@@ -47,6 +47,17 @@ class _NewEntryState extends State<NewEntry> {
         category, selectedDate, _descriptionTextEditingController.text.trim());
   }
 
+  final snackBar = SnackBar(
+    backgroundColor: Colors.white,
+    content: const Text(
+      style: TextStyle(
+        color: Colors.red,
+      ),
+      'Beschreibung / Inhalt darf nicht leer sein',
+    ),
+    duration: Duration(seconds: 3),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,8 +123,12 @@ class _NewEntryState extends State<NewEntry> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Entry entry = createEntry();
-          Navigator.pop(context, entry);
+          if (_descriptionTextEditingController.text.trim().isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          } else {
+            Entry entry = createEntry();
+            Navigator.pop(context, entry);
+          }
         },
         label: Text(
           kSaveEntry,

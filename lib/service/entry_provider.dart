@@ -49,9 +49,27 @@ class EntryProvider extends ChangeNotifier {
   void deleteEntry(int index) {
     if (index < 0 || index >= _entries.length) return;
 
+    Category c = _categories.firstWhere(
+      (element) => element.title == _entries[index].category,
+    );
+    c.numOfEntries--;
+    for (int i = 0; i < _categories.length; i++) {
+      if (_categories[i].numOfEntries == 0) {
+        _categories.removeAt(i);
+      }
+    }
     _entries.removeAt(index);
     _myBox.put("ENTRIES", _entries);
+    _myBox.put("CATEGORIES", _categories);
 
     notifyListeners();
+  }
+
+  List<Entry> getEntriesForCategory(String categoryTitle) {
+    return _entries
+        .where(
+          (element) => element.category == categoryTitle,
+        )
+        .toList();
   }
 }
