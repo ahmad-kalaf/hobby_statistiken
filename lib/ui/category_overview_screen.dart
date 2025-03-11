@@ -66,7 +66,7 @@ class _CategoryOverviewScreenState extends State<CategoryOverviewScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Anzahl Einträge: 0',
+                                'Anzahl Einträge: ${provider.getEntriesCount(_selectedCategory)}',
                                 overflow: TextOverflow.ellipsis,
                               ),
                               ElevatedButton(

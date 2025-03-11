@@ -76,4 +76,12 @@ class EntryProvider extends ChangeNotifier {
     _myBox.put("CATEGORIES", _categories);
     notifyListeners();
   }
+
+  int getEntriesCount(String? categoryTitle) {
+    return _categories
+            .where((element) => element.title == categoryTitle.toString())
+            .firstOrNull
+            ?.numOfEntries ??
+        0;
+  }
 }
