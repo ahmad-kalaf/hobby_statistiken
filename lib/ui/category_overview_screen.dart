@@ -18,6 +18,28 @@ class _CategoryOverviewScreenState extends State<CategoryOverviewScreen> {
   String? _selectedCategory;
   List<Category> _categories = [];
 
+  Future<bool> confirmDelete() async {
+    return await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Kategorie löschen?'),
+              content: Text(
+                  'Möchtest du die ausgewählte Kategorie und alle dazugehörige Einträge löschen?'),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text('Nein')),
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: Text('Ja')),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,10 +92,13 @@ class _CategoryOverviewScreenState extends State<CategoryOverviewScreen> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   if (_selectedCategory != null) {
-                                    provider.deleteCategoryAndContainingEntries(
-                                        _selectedCategory.toString());
+                                    await confirmDelete() == true
+                                        ? provider
+                                            .deleteCategoryAndContainingEntries(
+                                                _selectedCategory.toString())
+                                        : ();
                                   }
                                 },
                                 child: Icon(Icons.delete_forever),
