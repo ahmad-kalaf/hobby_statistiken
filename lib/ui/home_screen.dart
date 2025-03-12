@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:test_project/ui/category_overview_screen.dart";
 import "package:test_project/ui/home_overview_screen.dart";
+import "package:test_project/ui/search_entries_overview_screen.dart";
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     HomeOverviewScreen(),
     CategoryOverviewScreen(),
+    SearchEntriesOverviewScreen(),
   ];
 
   @override
@@ -31,9 +33,18 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         destinations: [
-          NavigationDestination(icon: Icon(Icons.home), label: "Startseite"),
           NavigationDestination(
-              icon: Icon(Icons.category), label: "Kategorien"),
+            icon: Icon(Icons.home),
+            label: "Startseite",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.category),
+            label: "Kategorien",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.manage_search_outlined),
+            label: "Suche",
+          ),
         ],
       ),
     );

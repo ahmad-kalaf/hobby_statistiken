@@ -84,4 +84,8 @@ class EntryProvider extends ChangeNotifier {
             ?.numOfEntries ??
         0;
   }
+
+  List<Entry> getEntriesForDate(DateTime date) {
+    return _entries.where((element) => element.eventDate == date).toList();
+  }
 }

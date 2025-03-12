@@ -98,7 +98,7 @@ class EntryWidget extends StatelessWidget {
             child: Text(
               description,
               style: TextStyle(fontSize: 18),
-              maxLines: 3, // Maximal 5 Zeilen
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
           )
